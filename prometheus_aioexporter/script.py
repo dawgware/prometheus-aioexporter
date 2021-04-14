@@ -116,6 +116,13 @@ class PrometheusExporterScript(Script):
             help="port to run the webserver on",
         )
         parser.add_argument(
+            "-e",
+            "--endpoint",
+            type=str,
+            default="metrics",
+            help="endpoint to scrape metrics deaults to '/metrics'",
+        )
+        parser.add_argument(
             "-L",
             "--log-level",
             default="WARNING",
@@ -158,7 +165,7 @@ class PrometheusExporterScript(Script):
     def _get_exporter(self, args: argparse.Namespace) -> PrometheusExporter:
         """Return a :class:`PrometheusExporter` configured with args."""
         exporter = PrometheusExporter(
-            self.name, self.description, args.host, args.port, self.registry
+            self.name, self.description, args.host, args.port, args.endpoint, self.registry
         )
         exporter.app.on_startup.append(self.on_application_startup)
         exporter.app.on_shutdown.append(self.on_application_shutdown)

@@ -17,7 +17,7 @@ def registry():
 @pytest.fixture
 def exporter(registry):
     yield PrometheusExporter(
-        "test-app", "A test application", "localhost", 8000, registry
+        "test-app", "A test application", "localhost", 8000, "matrix", registry
     )
 
 
@@ -34,6 +34,7 @@ class TestPrometheusExporter:
             mock.ANY,
             host="localhost",
             port=8000,
+            endpoint="matrix",
             print=mock.ANY,
             access_log_format='%a "%r" %s %b "%{Referrer}i" "%{User-Agent}i"',
         )
@@ -95,6 +96,7 @@ class TestPrometheusExporter:
             "A test application",
             ["0.0.0.0", "::1"],
             8000,
+            "metrics",
             registry,
         )
         mock_log = mocker.patch.object(exporter.app.logger, "info")

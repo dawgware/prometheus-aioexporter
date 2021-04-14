@@ -97,6 +97,7 @@ class TestPrometheusExporterScript:
             mock.ANY,
             host=["localhost"],
             port=12345,
+            endpoint="metrics",
             print=mock.ANY,
             access_log_format='%a "%r" %s %b "%{Referrer}i" "%{User-Agent}i"',
         )

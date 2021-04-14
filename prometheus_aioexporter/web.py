@@ -33,6 +33,7 @@ class PrometheusExporter:
     descrption: str
     hosts: List[str]
     port: int
+    endpoint: str
     register: MetricsRegistry
     app: Application
 
@@ -44,12 +45,14 @@ class PrometheusExporter:
         description: str,
         hosts: List[str],
         port: int,
+        endpoint: str,
         registry: MetricsRegistry,
     ):
         self.name = name
         self.description = description
         self.hosts = hosts
         self.port = port
+        self.endpoint = endpoint
         self.registry = registry
         self.app = self._make_application()
 
@@ -80,7 +83,7 @@ class PrometheusExporter:
         app = Application()
         app["exporter"] = self
         app.router.add_get("/", self._handle_home)
-        app.router.add_get("/metrics", self._handle_metrics)
+        app.router.add_get(f"/{self.endpoint}", self._handle_metrics)
         app.on_startup.append(self._log_startup_message)
         return app
 
