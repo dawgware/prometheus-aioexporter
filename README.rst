@@ -66,6 +66,7 @@ Exporter command-line
       -H HOST [HOST ...], --host HOST [HOST ...]
                             host addresses to bind (default: localhost)
       -p PORT, --port PORT  port to run the webserver on (default: 9090)
+      -e ENDPOINT, --endpoint ENDPOINT  endpoint to scrape metrics (default: metrics)
       -L {CRITICAL,ERROR,WARNING,INFO,DEBUG}, --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
                             minimum level for log messages (default: WARNING)
       --process-stats       include process stats in metrics (default: False)

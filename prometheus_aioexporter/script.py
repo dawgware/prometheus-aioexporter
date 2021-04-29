@@ -120,7 +120,7 @@ class PrometheusExporterScript(Script):
             "--endpoint",
             type=str,
             default="metrics",
-            help="endpoint to scrape metrics deaults to '/metrics'",
+            help="endpoint to expose metrics.",
         )
         parser.add_argument(
             "-L",

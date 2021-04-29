@@ -17,6 +17,12 @@ def registry():
 @pytest.fixture
 def exporter(registry):
     yield PrometheusExporter(
+        "test-app", "A test application", "localhost", 8000, "metrics", registry
+    )
+
+@pytest.fixture
+def endpoint_exporter(registry):
+    yield PrometheusExporter(
         "test-app", "A test application", "localhost", 8000, "matrix", registry
     )
 
@@ -34,7 +40,6 @@ class TestPrometheusExporter:
             mock.ANY,
             host="localhost",
             port=8000,
-            endpoint="matrix",
             print=mock.ANY,
             access_log_format='%a "%r" %s %b "%{Referrer}i" "%{User-Agent}i"',
         )
@@ -89,6 +94,20 @@ class TestPrometheusExporter:
         client = await aiohttp_client(exporter.app)
         await client.request("GET", "/metrics")
         assert args == [metrics]
+
+    async def test_endpoint(self, aiohttp_client, endpoint_exporter, registry):
+        """Scrape metrics from non-default endpoint."""
+        metrics = registry.create_metrics(
+            [MetricConfig("test_gauge", "A test gauge", "gauge", {})]
+        )
+        metrics["test_gauge"].set(12.3)
+        client = await aiohttp_client(endpoint_exporter.app)
+        request = await client.request("GET", "/matrix")
+        assert request.status == 200
+        assert request.content_type == "text/plain"
+        text = await request.text()
+        assert "HELP test_gauge A test gauge" in text
+        assert "test_gauge 12.3" in text
 
     async def test_startup_logger(self, mocker, registry):
         exporter = PrometheusExporter(

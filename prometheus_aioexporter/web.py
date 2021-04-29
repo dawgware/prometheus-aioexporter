@@ -111,7 +111,7 @@ class PrometheusExporter:
                 <h1>{title}</h1>
                 <p>
                   Metric are exported at the
-                  <a href="./metrics">/metrics</a> endpoint.
+                  <a href="./{self.endpoint}">/{self.endpoint}</a> endpoint.
                 </p>
               </body>
             </html>
